@@ -6,6 +6,7 @@ import { useI18n } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { TIER_STYLE } from "./TierBadge";
+import { CostEstimate } from "./CostEstimate";
 
 export function TierHero({ tier }: { tier: AiResult["severity_tier"] }) {
   const { t } = useI18n();

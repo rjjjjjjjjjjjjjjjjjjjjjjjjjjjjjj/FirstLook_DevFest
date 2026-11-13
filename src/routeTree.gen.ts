@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as CareRouteImport } from './routes/care'
 import { Route as CheckRouteImport } from './routes/check'
 import { Route as HelpRouteImport } from './routes/help'
+import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as HistoryIndexRouteImport } from './routes/history.index'
 import { Route as HistoryWoundIdRouteImport } from './routes/history.$woundId'
 
@@ -36,6 +37,11 @@ const HelpRoute = HelpRouteImport.update({
   path: '/help',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ProfileRoute = ProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const HistoryIndexRoute = HistoryIndexRouteImport.update({
   id: '/history/',
   path: '/history/',
@@ -52,6 +58,7 @@ export interface FileRoutesByFullPath {
   '/care': typeof CareRoute
   '/check': typeof CheckRoute
   '/help': typeof HelpRoute
+  '/profile': typeof ProfileRoute
   '/history/$woundId': typeof HistoryWoundIdRoute
   '/history/': typeof HistoryIndexRoute
 }
@@ -60,6 +67,7 @@ export interface FileRoutesByTo {
   '/care': typeof CareRoute
   '/check': typeof CheckRoute
   '/help': typeof HelpRoute
+  '/profile': typeof ProfileRoute
   '/history/$woundId': typeof HistoryWoundIdRoute
   '/history': typeof HistoryIndexRoute
 }
@@ -69,21 +77,36 @@ export interface FileRoutesById {
   '/care': typeof CareRoute
   '/check': typeof CheckRoute
   '/help': typeof HelpRoute
+  '/profile': typeof ProfileRoute
   '/history/$woundId': typeof HistoryWoundIdRoute
   '/history/': typeof HistoryIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    '/' | '/care' | '/check' | '/help' | '/history/$woundId' | '/history/'
+    | '/'
+    | '/care'
+    | '/check'
+    | '/help'
+    | '/profile'
+    | '/history/$woundId'
+    | '/history/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/care' | '/check' | '/help' | '/history/$woundId' | '/history'
+  to:
+    | '/'
+    | '/care'
+    | '/check'
+    | '/help'
+    | '/profile'
+    | '/history/$woundId'
+    | '/history'
   id:
     | '__root__'
     | '/'
     | '/care'
     | '/check'
     | '/help'
+    | '/profile'
     | '/history/$woundId'
     | '/history/'
   fileRoutesById: FileRoutesById
@@ -93,6 +116,7 @@ export interface RootRouteChildren {
   CareRoute: typeof CareRoute
   CheckRoute: typeof CheckRoute
   HelpRoute: typeof HelpRoute
+  ProfileRoute: typeof ProfileRoute
   HistoryWoundIdRoute: typeof HistoryWoundIdRoute
   HistoryIndexRoute: typeof HistoryIndexRoute
 }
@@ -127,6 +151,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof HelpRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/profile': {
+      id: '/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof ProfileRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/history/': {
       id: '/history/'
       path: '/history'
@@ -149,6 +180,7 @@ const rootRouteChildren: RootRouteChildren = {
   CareRoute: CareRoute,
   CheckRoute: CheckRoute,
   HelpRoute: HelpRoute,
+  ProfileRoute: ProfileRoute,
   HistoryWoundIdRoute: HistoryWoundIdRoute,
   HistoryIndexRoute: HistoryIndexRoute,
 }
