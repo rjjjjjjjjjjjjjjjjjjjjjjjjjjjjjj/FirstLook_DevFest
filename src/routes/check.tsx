@@ -341,10 +341,10 @@ function Symptoms({ answers, setAnswers, risk, onRisk, hasHealthProfile, useProf
         </div>
         {hasHealthProfile && (
           <div className="flex min-h-14 items-center justify-between gap-3 rounded-full bg-secondary px-4 py-2 text-sm font-semibold text-secondary-foreground">
-            <span>{t.usingHealthProfile}</span>
+            <span>{useProfile ? t.usingHealthProfile : t.notForThisCheck}</span>
             <span className="flex items-center gap-2">
               <span className="text-xs font-medium">{t.notForThisCheck}</span>
-              <Switch checked={useProfile} onCheckedChange={onUseProfile} aria-label={t.notForThisCheck} />
+              <Switch checked={!useProfile} onCheckedChange={(checked) => onUseProfile(!checked)} aria-label={t.notForThisCheck} />
             </span>
           </div>
         )}
