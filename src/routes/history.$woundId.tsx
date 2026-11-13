@@ -169,11 +169,16 @@ function Detail() {
         <ResultView
           result={last.result}
           actions={
-            <div className="grid grid-cols-2 gap-2">
-              <Button size="tap" variant="outline" onClick={share}><Share2 aria-hidden /> {t.share}</Button>
-              <Button size="tap" variant="outline" onClick={() => window.print()}><Printer aria-hidden /> {t.print}</Button>
-              <Button size="tap" variant="ghost" className="col-span-2 text-destructive" onClick={remove}><Trash2 aria-hidden /> {t.deleteWound}</Button>
-            </div>
+            <>
+              {last.result.severity_tier !== "emergency" && (
+                <Button size="xl" variant="secondary" onClick={markWorse}><TrendingDown aria-hidden /> {t.gettingWorse}</Button>
+              )}
+              <div className="grid grid-cols-2 gap-2">
+                <Button size="tap" variant="outline" onClick={share}><Share2 aria-hidden /> {t.share}</Button>
+                <Button size="tap" variant="outline" onClick={() => window.print()}><Printer aria-hidden /> {t.print}</Button>
+                <Button size="tap" variant="ghost" className="col-span-2 text-destructive" onClick={remove}><Trash2 aria-hidden /> {t.deleteWound}</Button>
+              </div>
+            </>
           }
         />
       </div>
