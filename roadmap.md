@@ -1,9 +1,7 @@
-# Account privacy setup
-- [x] Verify email sign-in and private photo storage.
-- [x] Add owner-only profiles and strengthen wound-check access.
-- [x] Collect profile display names and isolate cached history between accounts.
-- [x] Run account privacy tests and verify saved data through the app.
-
-# Gemini photo analysis
-- [x] Validate photo/symptom input and structured JSON output in the existing authenticated server function.
-- [x] Test validation and verify a real photo check through the app.
+# FirstLook safety and guidance update
+- [ ] Reorder the check flow and add description, risk factors, first-use acknowledgment, and insufficient-information handling.
+- [ ] Add emergency/self-harm text detection, tier-escalation rules, warning/24-hour guidance, and "It's getting worse" actions.
+- [ ] Save each check's inputs, AI output, triggered rules, and timestamp.
+- [ ] Add an optional owner-only My Health Profile with pre-fill/opt-out and data deletion.
+- [ ] Add result cost estimates, insurer questions, emergency cost messaging, and uninsured low-cost options.
+- [ ] Update bilingual copy, tests, and verify the core flows in the preview.
