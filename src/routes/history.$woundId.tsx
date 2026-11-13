@@ -86,6 +86,17 @@ function Detail() {
     }
   };
 
+  const markWorse = async () => {
+    const next = escalateResult(last.result);
+    const { error } = await supabase.from("checks").update({
+      tier: next.severity_tier,
+      result: { ...next, rawAiOutput: last.result.rawAiOutput } as never,
+    }).eq("id", last.id);
+    if (error) return toast.error(error.message);
+    await qc.invalidateQueries({ queryKey: ["wounds"] });
+    toast.success(t.worseUpdated);
+  };
+
   const share = async () => {
     const text = buildSummary(wound, { tier: tierLabel, disclaimer: t.disclaimerFull });
     if (navigator.share) {
