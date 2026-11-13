@@ -49,7 +49,10 @@ function HealthProfileScreen() {
     const preferences = { ...data, healthProfile: next };
     const { error } = await supabase.from("profiles").update({ preferences }).eq("id", session.user.id);
     setBusy(false);
-    if (error) return toast.error(error.message);
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
     qc.setQueryData(["profile-preferences", session.user.id], preferences);
     toast.success(next ? t.profileSaved : t.profileDeleted);
   };

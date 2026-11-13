@@ -92,7 +92,10 @@ function Detail() {
       tier: next.severity_tier,
       result: { ...next, rawAiOutput: last.result.rawAiOutput } as never,
     }).eq("id", last.id);
-    if (error) return toast.error(error.message);
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
     await qc.invalidateQueries({ queryKey: ["wounds"] });
     toast.success(t.worseUpdated);
   };

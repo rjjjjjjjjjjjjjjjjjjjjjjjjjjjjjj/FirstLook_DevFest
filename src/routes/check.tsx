@@ -166,7 +166,10 @@ function CheckFlow() {
         tier: next.severity_tier,
         result: savedResult as never,
       }).eq("id", savedCheckId);
-      if (updateError) return toast.error(updateError.message);
+      if (updateError) {
+        toast.error(updateError.message);
+        return;
+      }
       qc.invalidateQueries({ queryKey: ["wounds"] });
     }
     toast.success(t.worseUpdated);
