@@ -28,3 +28,9 @@ use the editor.
   own key and store it in Secrets.
 - **Secrets.** Lovable manages them. Do not put secret values in the repo.
 <!-- LOVABLE:END -->
+
+## Project rules
+- Safety rules (emergency chips, fever + redness/pus floor, low-confidence bump) live in `src/lib/triage.ts` and run after every AI result; why: AI output must never lower a rule-based tier.
+- Photo analysis runs in `src/lib/analyze.functions.ts` (auth-required server fn) streaming the AI gateway via `src/lib/ai.server.ts`; why: keeps the key server-side and blocks anonymous AI spend.
+- All UI text lives in `src/lib/i18n.tsx` (en/es dictionaries); why: every screen and AI reply must follow the language toggle.
+- Photo paths starting with `/` are static demo images; others are private `photos` bucket paths under `{userId}/`.
