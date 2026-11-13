@@ -14,7 +14,7 @@ import { useI18n } from "@/lib/i18n";
 import { useAuth } from "@/lib/auth";
 import { useWounds, buildSummary, type CheckRow } from "@/lib/data";
 import { analyzeWound } from "@/lib/analyze.functions";
-import { applySafetyRules, trendFromChange } from "@/lib/triage";
+import { applySafetyRules, escalateResult, trendFromChange } from "@/lib/triage";
 import { photoUrl, toDataUrl, uploadDataUrl, usePhotoUrl } from "@/lib/photos";
 import { supabase } from "@/integrations/supabase/client";
 import { cn } from "@/lib/utils";
@@ -64,14 +64,17 @@ function Detail() {
     try {
       const firstUrl = await photoUrl(first.photo_path);
       const images = firstUrl ? [await toDataUrl(firstUrl), photo] : [photo];
-      const res = await analyze({ data: { mode: "followup", images, answers: last.answers, forWhom: last.for_whom as "me", ageGroup: last.age_group, lang } });
+      const res = await analyze({ data: {
+        mode: "followup", images, answers: last.answers, description: last.answers.description ?? "",
+        risk: last.answers.risk, forWhom: last.for_whom as "me", ageGroup: last.age_group, lang,
+      } });
       if (!res.ok) throw new Error(res.error);
       const final = applySafetyRules(res.result, last.answers);
       if (final.comparison?.change === "worse") final.severity_tier = final.severity_tier === "self_care" ? "clinic" : final.severity_tier;
       const path = await uploadDataUrl(session.user.id, photo);
       const { error } = await supabase.from("checks").insert({
         wound_id: wound.id, photo_path: path, for_whom: last.for_whom, age_group: last.age_group, answers: last.answers,
-        result: final as never, tier: final.severity_tier, summary: final.comparison?.summary || final.reasoning,
+        result: { ...final, rawAiOutput: res.result } as never, tier: final.severity_tier, summary: final.comparison?.summary || final.reasoning,
       });
       if (error) throw error;
       await qc.invalidateQueries({ queryKey: ["wounds"] });
@@ -81,6 +84,20 @@ function Detail() {
       toast.error(e instanceof Error ? e.message : "Error");
       setMode("follow");
     }
+  };
+
+  const markWorse = async () => {
+    const next = escalateResult(last.result);
+    const { error } = await supabase.from("checks").update({
+      tier: next.severity_tier,
+      result: { ...next, rawAiOutput: last.result.rawAiOutput } as never,
+    }).eq("id", last.id);
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
+    await qc.invalidateQueries({ queryKey: ["wounds"] });
+    toast.success(t.worseUpdated);
   };
 
   const share = async () => {
@@ -155,11 +172,16 @@ function Detail() {
         <ResultView
           result={last.result}
           actions={
-            <div className="grid grid-cols-2 gap-2">
-              <Button size="tap" variant="outline" onClick={share}><Share2 aria-hidden /> {t.share}</Button>
-              <Button size="tap" variant="outline" onClick={() => window.print()}><Printer aria-hidden /> {t.print}</Button>
-              <Button size="tap" variant="ghost" className="col-span-2 text-destructive" onClick={remove}><Trash2 aria-hidden /> {t.deleteWound}</Button>
-            </div>
+            <>
+              {last.result.severity_tier !== "emergency" && (
+                <Button size="xl" variant="secondary" onClick={markWorse}><TrendingDown aria-hidden /> {t.gettingWorse}</Button>
+              )}
+              <div className="grid grid-cols-2 gap-2">
+                <Button size="tap" variant="outline" onClick={share}><Share2 aria-hidden /> {t.share}</Button>
+                <Button size="tap" variant="outline" onClick={() => window.print()}><Printer aria-hidden /> {t.print}</Button>
+                <Button size="tap" variant="ghost" className="col-span-2 text-destructive" onClick={remove}><Trash2 aria-hidden /> {t.deleteWound}</Button>
+              </div>
+            </>
           }
         />
       </div>

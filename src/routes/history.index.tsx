@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ClipboardList } from "lucide-react";
+import { ClipboardList, UserRound } from "lucide-react";
 import { AppShell } from "@/components/app/AppShell";
 import { AuthGate } from "@/components/app/AuthGate";
 import { WoundCard } from "@/components/app/WoundCard";
@@ -32,7 +32,12 @@ function History() {
   return (
     <AppShell>
       <div className="step-in space-y-4 pt-6">
-        <h1 className="text-3xl font-bold tracking-tight">{t.historyTitle}</h1>
+        <div className="flex items-center justify-between gap-3">
+          <h1 className="text-3xl font-bold tracking-tight">{t.historyTitle}</h1>
+          <Button variant="outline" size="tap" asChild>
+            <Link to="/profile" aria-label={t.profileTitle}><UserRound aria-hidden /><span className="sr-only sm:not-sr-only">{t.profileTitle}</span></Link>
+          </Button>
+        </div>
         {isLoading ? (
           <p className="text-muted-foreground">{t.loading}</p>
         ) : data && data.length > 0 ? (
