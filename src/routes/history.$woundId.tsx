@@ -14,7 +14,7 @@ import { useI18n } from "@/lib/i18n";
 import { useAuth } from "@/lib/auth";
 import { useWounds, buildSummary, type CheckRow } from "@/lib/data";
 import { analyzeWound } from "@/lib/analyze.functions";
-import { applySafetyRules, trendFromChange } from "@/lib/triage";
+import { applySafetyRules, escalateResult, trendFromChange } from "@/lib/triage";
 import { photoUrl, toDataUrl, uploadDataUrl, usePhotoUrl } from "@/lib/photos";
 import { supabase } from "@/integrations/supabase/client";
 import { cn } from "@/lib/utils";
