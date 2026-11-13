@@ -74,7 +74,7 @@ function Detail() {
       const path = await uploadDataUrl(session.user.id, photo);
       const { error } = await supabase.from("checks").insert({
         wound_id: wound.id, photo_path: path, for_whom: last.for_whom, age_group: last.age_group, answers: last.answers,
-        result: final as never, tier: final.severity_tier, summary: final.comparison?.summary || final.reasoning,
+        result: { ...final, rawAiOutput: res.result } as never, tier: final.severity_tier, summary: final.comparison?.summary || final.reasoning,
       });
       if (error) throw error;
       await qc.invalidateQueries({ queryKey: ["wounds"] });
