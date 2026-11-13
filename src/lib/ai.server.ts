@@ -1,6 +1,6 @@
-// Server-only: Lovable AI Gateway call (streamed, consumed server-side).
-const GATEWAY = "https://ai.gateway.lovable.dev/v1/chat/completions";
-export const VISION_MODEL = "google/gemini-3-flash-preview";
+// Server-only: direct Google Gemini API call (no Lovable AI gateway).
+export const GEMINI_MODEL = "gemini-3.8-flash";
+export const GEMINI_ENDPOINT = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`;
 
 export class GatewayError extends Error {
   constructor(public status: number, message: string) {
@@ -10,56 +10,35 @@ export class GatewayError extends Error {
 
 type Part = { type: "text"; text: string } | { type: "image_url"; image_url: { url: string } };
 
+function toGeminiPart(p: Part) {
+  if (p.type === "text") return { text: p.text };
+  const m = /^data:([^;]+);base64,(.+)$/.exec(p.image_url.url);
+  if (!m) throw new GatewayError(400, "Invalid image.");
+  return { inline_data: { mime_type: m[1], data: m[2] } };
+}
+
 export async function streamGatewayText(system: string, parts: Part[]): Promise<string> {
-  const key = process.env['LOVABLE_API_KEY'];
+  const key = process.env['GEMINI_API_KEY'];
   if (!key) throw new GatewayError(401, "AI is not configured.");
-  const res = await fetch(GATEWAY, {
+  const res = await fetch(GEMINI_ENDPOINT, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "Lovable-API-Key": key,
-      "X-Lovable-AIG-SDK": "fetch",
-    },
+    headers: { "Content-Type": "application/json", "x-goog-api-key": key },
     body: JSON.stringify({
-      model: VISION_MODEL,
-      stream: true,
-      response_format: { type: "json_object" },
-      messages: [
-        { role: "system", content: system },
-        { role: "user", content: parts },
-      ],
+      system_instruction: { parts: [{ text: system }] },
+      contents: [{ role: "user", parts: parts.map(toGeminiPart) }],
+      generationConfig: { responseMimeType: "application/json" },
     }),
   });
-  if (!res.ok || !res.body) {
+  if (!res.ok) {
     let msg = "The photo check is unavailable right now.";
     try {
-      const j = (await res.json()) as { message?: string; error?: { message?: string } };
-      msg = j.message ?? j.error?.message ?? msg;
+      const j = (await res.json()) as { error?: { message?: string } };
+      msg = j.error?.message ?? msg;
     } catch {}
     throw new GatewayError(res.status, msg);
   }
-  const reader = res.body.getReader();
-  const dec = new TextDecoder();
-  let buf = "";
-  let out = "";
-  for (;;) {
-    const { done, value } = await reader.read();
-    if (done) break;
-    buf += dec.decode(value, { stream: true });
-    const lines = buf.split("\n");
-    buf = lines.pop() ?? "";
-    for (const line of lines) {
-      const l = line.trim();
-      if (!l.startsWith("data:")) continue;
-      const data = l.slice(5).trim();
-      if (data === "[DONE]") continue;
-      try {
-        const j = JSON.parse(data);
-        out += j.choices?.[0]?.delta?.content ?? "";
-      } catch {}
-    }
-  }
-  return out;
+  const j = (await res.json()) as { candidates?: { content?: { parts?: { text?: string }[] } }[] };
+  return j.candidates?.[0]?.content?.parts?.map((x) => x.text ?? "").join("") ?? "";
 }
 
 export function parseJsonLoose(text: string): unknown {
