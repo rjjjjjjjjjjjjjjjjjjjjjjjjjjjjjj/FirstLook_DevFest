@@ -44,7 +44,7 @@ export function maxTier(a: Tier, b: Tier): Tier {
 }
 
 export function bumpTier(t: Tier): Tier {
-  return TIER_ORDER[Math.min(tierRank(t) + 1, TIER_ORDER.length - 1)];
+  return TIER_ORDER[Math.min(tierRank(t) + 1, TIER_ORDER.length - 1)] ?? "emergency";
 }
 
 /** Rule layer applied on top of whatever the AI returns. Never lowers the tier. */

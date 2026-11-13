@@ -11,7 +11,7 @@ export class GatewayError extends Error {
 type Part = { type: "text"; text: string } | { type: "image_url"; image_url: { url: string } };
 
 export async function streamGatewayText(system: string, parts: Part[]): Promise<string> {
-  const key = process.env.LOVABLE_API_KEY;
+  const key = process.env['LOVABLE_API_KEY'];
   if (!key) throw new GatewayError(401, "AI is not configured.");
   const res = await fetch(GATEWAY, {
     method: "POST",

@@ -25,8 +25,8 @@ const TYPES = [
 ] as const;
 
 function openMaps(q: string) {
-  const fallback = () => window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(q + " near me")}`, "_blank", "noopener");
-  if (!navigator.geolocation) return fallback();
+  const fallback = () => void window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(q + " near me")}`, "_blank", "noopener");
+  if (!navigator.geolocation) { fallback(); return; }
   const win = window.open("about:blank", "_blank");
   navigator.geolocation.getCurrentPosition(
     (p) => {

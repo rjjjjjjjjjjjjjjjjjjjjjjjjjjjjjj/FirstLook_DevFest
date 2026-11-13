@@ -52,10 +52,10 @@ function Detail() {
   const [photo, setPhoto] = useState<string | null>(null);
   const wound = data?.find((w) => w.id === woundId);
   if (!data) return <AppShell><p className="pt-10 text-muted-foreground">{t.loading}</p></AppShell>;
-  if (!wound) return <AppShell><StepHeader onBack={() => nav({ to: "/history" })} /><p>Not found.</p></AppShell>;
+  if (!wound || wound.checks.length === 0) return <AppShell><StepHeader onBack={() => nav({ to: "/history" })} /><p>Not found.</p></AppShell>;
 
-  const first = wound.checks[0];
-  const last = wound.checks[wound.checks.length - 1];
+  const first = wound.checks[0]!;
+  const last = wound.checks[wound.checks.length - 1]!;
   const tierLabel = (x: CheckRow["tier"]) => t[`tier_${x}`];
 
   const runFollowup = async () => {

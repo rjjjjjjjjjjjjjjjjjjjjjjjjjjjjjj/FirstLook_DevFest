@@ -219,7 +219,7 @@ function Symptoms({ answers, setAnswers, onDone }: { answers: Answers; setAnswer
           <span id="pain-label" className="font-medium">{t.pain}</span>
           <span className="text-2xl font-bold text-primary">{answers.pain}</span>
         </div>
-        <Slider aria-labelledby="pain-label" min={0} max={10} step={1} value={[answers.pain]} onValueChange={([v]) => set("pain", v)} className="py-3" />
+        <Slider aria-labelledby="pain-label" min={0} max={10} step={1} value={[answers.pain]} onValueChange={([v]) => set("pain", v ?? 0)} className="py-3" />
         <div className="flex justify-between text-sm text-muted-foreground"><span>{t.painLow}</span><span>{t.painHigh}</span></div>
       </div>
       <div className="card-soft space-y-2 p-4">

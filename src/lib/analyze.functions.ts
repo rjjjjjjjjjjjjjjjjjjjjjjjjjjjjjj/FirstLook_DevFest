@@ -51,7 +51,7 @@ export const analyzeWound = createServerFn({ method: "POST" })
         comparison:
           parsed.comparison && typeof parsed.comparison === "object"
             ? {
-                change: (["better", "same", "worse", "unclear"] as const).includes((parsed.comparison as { change: never }).change)
+                change: (["better", "same", "worse", "unclear"] as const).includes((parsed.comparison as { change: string }).change as never)
                   ? (parsed.comparison as { change: "better" }).change
                   : "unclear",
                 summary: String((parsed.comparison as { summary?: string }).summary ?? ""),

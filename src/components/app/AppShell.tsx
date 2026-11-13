@@ -65,7 +65,7 @@ export function AppShell({ children, hideTabs }: { children: ReactNode; hideTabs
   );
 }
 
-export function StepHeader({ step, total, onBack }: { step?: number; total?: number; onBack: () => void }) {
+export function StepHeader({ step, total, onBack }: { step?: number | undefined; total?: number | undefined; onBack: () => void }) {
   const { t } = useI18n();
   return (
     <div className="flex items-center gap-3 py-2">

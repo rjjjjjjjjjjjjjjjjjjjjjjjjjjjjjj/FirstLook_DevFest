@@ -7,8 +7,8 @@ export const startDemo = createServerFn({ method: "POST" }).handler(async () => 
   const password = "FirstLook-demo-2026!";
   const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 
-  const key = process.env.SUPABASE_PUBLISHABLE_KEY!;
-  const pub = createClient(process.env.SUPABASE_URL!, key, {
+  const key = process.env['SUPABASE_PUBLISHABLE_KEY']!;
+  const pub = createClient(process.env['SUPABASE_URL']!, key, {
     auth: { persistSession: false, autoRefreshToken: false },
     global: {
       fetch: (input, init) => {
