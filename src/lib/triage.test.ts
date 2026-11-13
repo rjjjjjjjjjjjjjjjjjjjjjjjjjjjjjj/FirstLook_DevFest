@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { applySafetyRules, DEFAULT_ANSWERS, type AiResult } from "./triage";
+import { applySafetyRules, DEFAULT_ANSWERS, DEFAULT_RISK, RISK_KEYS, escalateResult, hasEnoughInformation, type AiResult } from "./triage";
 
 const base: AiResult = {
   wound_type: "scrape", visible_signs: [], severity_tier: "self_care", confidence: "high",

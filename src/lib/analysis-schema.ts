@@ -1,13 +1,25 @@
 import { z } from "zod";
 
+export const RiskInput = z.object({
+  diabetes: z.boolean(),
+  bloodThinners: z.boolean(),
+  weakImmune: z.boolean(),
+  pregnant: z.boolean(),
+  biteOrPuncture: z.boolean(),
+  handsFaceJoint: z.boolean(),
+  noTetanus: z.boolean(),
+});
+
 export const AnalysisInput = z.object({
   mode: z.enum(["check", "followup"]),
   images: z.array(z.string().max(4_000_000).regex(/^data:image\/(jpeg|png|webp);base64,[A-Za-z0-9+/]+={0,2}$/)).max(2),
+  description: z.string().max(500),
+  risk: RiskInput,
   answers: z.object({
     fever: z.boolean(), spreadingRedness: z.boolean(), pus: z.boolean(),
     warmth: z.boolean(), numbness: z.boolean(), pain: z.number().min(0).max(10),
     howLong: z.string().max(100), tetanus: z.enum(["yes", "no", "unsure"]),
-  }),
+  }).passthrough(),
   forWhom: z.enum(["me", "other"]),
   ageGroup: z.string().max(100).nullable(),
   lang: z.enum(["en", "es"]),

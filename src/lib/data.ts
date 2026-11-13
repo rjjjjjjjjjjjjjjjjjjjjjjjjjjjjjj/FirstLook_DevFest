@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import type { AiResult, Answers, Tier } from "./triage";
+import { DEFAULT_ANSWERS, DEFAULT_RISK, type AiResult, type Answers, type Tier } from "./triage";
 
 export type CheckRow = {
   id: string;
