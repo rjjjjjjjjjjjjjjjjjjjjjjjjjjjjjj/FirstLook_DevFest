@@ -34,3 +34,6 @@ use the editor.
 - Photo analysis runs in `src/lib/analyze.functions.ts` (auth-required server fn) streaming the AI gateway via `src/lib/ai.server.ts`; why: keeps the key server-side and blocks anonymous AI spend.
 - All UI text lives in `src/lib/i18n.tsx` (en/es dictionaries); why: every screen and AI reply must follow the language toggle.
 - Photo paths starting with `/` are static demo images; others are private `photos` bucket paths under `{userId}/`.
+- Profiles are created by the auth signup trigger and are owner-readable/updatable only; why: profile provisioning must not depend on a confirmed browser session.
+- Wound checks must reference an owned wound and an owned photo path; why: row ownership alone does not validate linked resources.
+- Clear the query cache on account identity changes; why: previous-account history must never remain visible after switching users.
