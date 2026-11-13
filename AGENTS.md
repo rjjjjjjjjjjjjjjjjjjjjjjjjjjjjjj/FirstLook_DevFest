@@ -31,7 +31,7 @@ use the editor.
 
 ## Project rules
 - Safety rules (emergency chips, fever + redness/pus floor, low-confidence bump) live in `src/lib/triage.ts` and run after every AI result; why: AI output must never lower a rule-based tier.
-- Photo analysis runs in `src/lib/analyze.functions.ts` (auth-required server fn) streaming the AI gateway via `src/lib/ai.server.ts`; why: keeps the key server-side and blocks anonymous AI spend.
+- Photo analysis runs in `src/lib/analyze.functions.ts` (auth-required server fn) calling the Google Gemini API directly with `GEMINI_API_KEY` via `src/lib/ai.server.ts`; why: user chose direct Gemini over the gateway; keeps the key server-side and blocks anonymous AI spend.
 - Validate photo/symptom inputs and Gemini JSON with `src/lib/analysis-schema.ts`; why: incomplete model output must not be converted into usable medical advice.
 - All UI text lives in `src/lib/i18n.tsx` (en/es dictionaries); why: every screen and AI reply must follow the language toggle.
 - Photo paths starting with `/` are static demo images; others are private `photos` bucket paths under `{userId}/`.

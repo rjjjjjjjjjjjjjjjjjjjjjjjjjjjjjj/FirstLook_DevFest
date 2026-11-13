@@ -34,8 +34,8 @@ export const analyzeWound = createServerFn({ method: "POST" })
     } catch (e) {
       if (e instanceof GatewayError) {
         const error =
-          e.status === 402
-            ? "The AI check is paused because the app is out of AI credits."
+          e.status === 402 || e.status === 403
+            ? "The AI check is paused because the app is out of AI credits or the Gemini key was rejected."
             : e.status === 429
               ? "Lots of people are checking right now. Please wait a minute and try again."
               : e.message;
