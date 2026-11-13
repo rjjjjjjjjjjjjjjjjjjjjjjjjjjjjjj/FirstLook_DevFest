@@ -14,7 +14,77 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      checks: {
+        Row: {
+          age_group: string | null
+          answers: Json
+          created_at: string
+          for_whom: string
+          id: string
+          photo_path: string | null
+          result: Json
+          summary: string
+          tier: string
+          user_id: string
+          wound_id: string
+        }
+        Insert: {
+          age_group?: string | null
+          answers?: Json
+          created_at?: string
+          for_whom?: string
+          id?: string
+          photo_path?: string | null
+          result?: Json
+          summary?: string
+          tier: string
+          user_id?: string
+          wound_id: string
+        }
+        Update: {
+          age_group?: string | null
+          answers?: Json
+          created_at?: string
+          for_whom?: string
+          id?: string
+          photo_path?: string | null
+          result?: Json
+          summary?: string
+          tier?: string
+          user_id?: string
+          wound_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "checks_wound_id_fkey"
+            columns: ["wound_id"]
+            isOneToOne: false
+            referencedRelation: "wounds"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      wounds: {
+        Row: {
+          created_at: string
+          id: string
+          title: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          title?: string
+          user_id?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          title?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
