@@ -20,7 +20,7 @@ function toGeminiPart(p: Part) {
 export async function streamGatewayText(system: string, parts: Part[]): Promise<string> {
   const key = process.env['GEMINI_API_KEY'];
   if (!key) throw new GatewayError(401, "AI is not configured.");
-  const res = await fetch(GEMINI_ENDPOINT, {
+  const call = () => fetch(GEMINI_ENDPOINT, {
     method: "POST",
     headers: { "Content-Type": "application/json", "x-goog-api-key": key },
     body: JSON.stringify({
@@ -29,6 +29,11 @@ export async function streamGatewayText(system: string, parts: Part[]): Promise<
       generationConfig: { responseMimeType: "application/json" },
     }),
   });
+  let res = await call();
+  for (let i = 0; i < 2 && (res.status === 503 || res.status === 429); i++) {
+    await new Promise((r) => setTimeout(r, 1500 * (i + 1)));
+    res = await call();
+  }
   if (!res.ok) {
     let msg = "The photo check is unavailable right now.";
     try {
