@@ -17,6 +17,7 @@ export function AuthGate({ children }: { children: ReactNode }) {
   const [mode, setMode] = useState<"in" | "up">("in");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [displayName, setDisplayName] = useState("");
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState<string | null>(null);
 
@@ -43,7 +44,7 @@ export function AuthGate({ children }: { children: ReactNode }) {
       const { error } = await supabase.auth.signInWithPassword({ email, password });
       if (error) setMsg(error.message);
     } else {
-      const { data, error } = await supabase.auth.signUp({ email, password, options: { emailRedirectTo: window.location.origin } });
+      const { data, error } = await supabase.auth.signUp({ email, password, options: { emailRedirectTo: window.location.origin, data: { display_name: displayName.trim() } } });
       if (error) setMsg(error.message);
       else if (!data.session) setMsg(t.checkEmail);
     }
@@ -62,6 +63,10 @@ export function AuthGate({ children }: { children: ReactNode }) {
         </Button>
         <p className="text-center text-sm text-muted-foreground">{t.orEmail}</p>
         <form onSubmit={submit} className="card-soft space-y-4 p-5">
+          {mode === "up" && <div className="space-y-1.5">
+            <Label htmlFor="display-name" className="text-base">{t.displayName}</Label>
+            <Input id="display-name" autoComplete="nickname" maxLength={100} className="h-12 text-base" value={displayName} onChange={(e) => setDisplayName(e.target.value)} />
+          </div>}
           <div className="space-y-1.5">
             <Label htmlFor="email" className="text-base">{t.email}</Label>
             <Input id="email" type="email" required autoComplete="email" className="h-12 text-base" value={email} onChange={(e) => setEmail(e.target.value)} />
@@ -73,9 +78,9 @@ export function AuthGate({ children }: { children: ReactNode }) {
           <Button size="xl" variant="secondary" type="submit" disabled={busy}>
             {mode === "in" ? t.signIn : t.signUp}
           </Button>
-          <button type="button" className="min-h-12 w-full text-sm font-medium text-primary" onClick={() => setMode(mode === "in" ? "up" : "in")}>
+          <Button variant="ghost" type="button" className="min-h-12 w-full text-sm font-medium text-primary" onClick={() => { setMsg(null); setMode(mode === "in" ? "up" : "in"); }}>
             {mode === "in" ? t.needAccount : t.haveAccount}
-          </button>
+          </Button>
         </form>
         {msg && <p role="status" className="rounded-xl bg-muted p-3 text-center">{msg}</p>}
         <p className="text-center text-sm text-muted-foreground">{t.disclaimerShort}</p>
