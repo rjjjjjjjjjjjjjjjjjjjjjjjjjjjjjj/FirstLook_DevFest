@@ -28,7 +28,16 @@ export function useWounds(enabled = true) {
       if (error) throw error;
       return (data as unknown as WoundRow[]).map((w) => ({
         ...w,
-        checks: [...w.checks].sort((a, b) => a.created_at.localeCompare(b.created_at)),
+        checks: [...w.checks]
+          .sort((a, b) => a.created_at.localeCompare(b.created_at))
+          .map((check) => ({
+            ...check,
+            answers: {
+              ...DEFAULT_ANSWERS,
+              ...check.answers,
+              risk: { ...DEFAULT_RISK, ...(check.answers?.risk ?? {}) },
+            },
+          })),
       }));
     },
   });
@@ -43,6 +52,10 @@ export function buildSummary(w: WoundRow, labels: { tier: (t: Tier) => string; d
     const a = c.answers;
     const sym = [a.fever && "fever", a.spreadingRedness && "spreading redness", a.pus && "pus", a.warmth && "warmth", a.numbness && "numbness"].filter(Boolean);
     lines.push(`  Pain: ${a.pain}/10. Symptoms: ${sym.length ? sym.join(", ") : "none reported"}. Tetanus in 10 yrs: ${a.tetanus}`);
+    if (a.description) lines.push(`  Description: ${a.description}`);
+    const risks = Object.entries(a.risk ?? {}).filter(([, active]) => active).map(([key]) => key);
+    if (risks.length) lines.push(`  Risk factors: ${risks.join(", ")}`);
+    if (c.result.rulesTriggered?.length) lines.push(`  Safety rules: ${c.result.rulesTriggered.join(", ")}`);
     if (c.result.comparison?.summary) lines.push(`  Change: ${c.result.comparison.change}. ${c.result.comparison.summary}`);
     lines.push(`  Notes: ${c.summary}`);
   }

@@ -27,4 +27,23 @@ describe("safety rules", () => {
     expect(r.severity_tier).toBe("clinic");
     expect(r.lowConfidence).toBe(true);
   });
+  it.each(RISK_KEYS)("the %s risk factor raises the minimum tier by one level", (key) => {
+    const risk = { ...DEFAULT_RISK, [key]: true };
+    const r = applySafetyRules(base, { ...DEFAULT_ANSWERS, risk });
+    expect(r.severity_tier).toBe("clinic");
+    expect(r.rulesTriggered).toContain("risk_factor");
+  });
+  it("multiple risk factors still add only one level", () => {
+    const risk = { ...DEFAULT_RISK, diabetes: true, pregnant: true, bloodThinners: true };
+    expect(applySafetyRules(base, { ...DEFAULT_ANSWERS, risk }).severity_tier).toBe("clinic");
+  });
+  it("getting worse moves the result one level higher and records the rule", () => {
+    const r = escalateResult({ ...base, severity_tier: "clinic" });
+    expect(r.severity_tier).toBe("urgent_care");
+    expect(r.rulesTriggered).toContain("getting_worse");
+  });
+  it("does not allow AI analysis without a photo, description, or symptom interaction", () => {
+    expect(hasEnoughInformation(null, "  ", false)).toBe(false);
+    expect(hasEnoughInformation(null, "", true)).toBe(true);
+  });
 });
