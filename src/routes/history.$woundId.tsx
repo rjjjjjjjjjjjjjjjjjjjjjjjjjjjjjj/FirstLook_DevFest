@@ -64,7 +64,10 @@ function Detail() {
     try {
       const firstUrl = await photoUrl(first.photo_path);
       const images = firstUrl ? [await toDataUrl(firstUrl), photo] : [photo];
-      const res = await analyze({ data: { mode: "followup", images, answers: last.answers, forWhom: last.for_whom as "me", ageGroup: last.age_group, lang } });
+      const res = await analyze({ data: {
+        mode: "followup", images, answers: last.answers, description: last.answers.description ?? "",
+        risk: last.answers.risk, forWhom: last.for_whom as "me", ageGroup: last.age_group, lang,
+      } });
       if (!res.ok) throw new Error(res.error);
       const final = applySafetyRules(res.result, last.answers);
       if (final.comparison?.change === "worse") final.severity_tier = final.severity_tier === "self_care" ? "clinic" : final.severity_tier;

@@ -385,7 +385,7 @@ function CrisisScreen({ onBack }: { onBack: () => void }) {
             <a href="tel:988" className="flex min-h-16 items-center justify-center gap-3 rounded-2xl bg-primary text-xl font-bold text-primary-foreground">
               <Phone aria-hidden /> {t.call988}
             </a>
-            <a href="sms:988" className="flex min-h-12 items-center justify-center rounded-xl border font-semibold text-primary">Text 988</a>
+            <a href="sms:988" className="flex min-h-12 items-center justify-center rounded-xl border font-semibold text-primary">{t.text988}</a>
           </div>
           <p className="flex gap-2 font-semibold text-destructive"><AlertCircle className="size-6 shrink-0" aria-hidden /> {t.immediateDanger}</p>
           <a href="tel:911" className="inline-flex min-h-12 items-center font-bold text-destructive underline">{t.call911}</a>
