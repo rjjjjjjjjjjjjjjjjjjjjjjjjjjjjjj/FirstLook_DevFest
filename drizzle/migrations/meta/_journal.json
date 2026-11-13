@@ -8,6 +8,13 @@
       "when": 1794586769101,
       "tag": "0000_firstlook_schema",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1794588773722,
+      "tag": "0001_profiles_and_owner_privacy",
+      "breakpoints": true
     }
   ]
 }
