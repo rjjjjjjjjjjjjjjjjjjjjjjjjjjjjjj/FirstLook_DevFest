@@ -13,6 +13,9 @@ import {
   toBase64Image,
 } from "./analyze-map";
 
+/** AWS answered with its canned placeholder (e.g. daily AI quota used up). */
+const UNAVAILABLE = { ok: false as const, error: AWS_FAILURE_MESSAGE, unavailable: true as const };
+
 export const analyzeWound = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((d: unknown) => AnalysisInput.parse(d))
@@ -36,11 +39,13 @@ export const analyzeWound = createServerFn({ method: "POST" })
         const compareBody = buildComparePayload(photos[0]!.b64, photos[1]!.b64, data.lang);
         const [compareRaw, checkRaw] = await Promise.all([callAnalyze(compareBody), callAnalyze(checkBody)]);
         const result = normalizeCheckResult(checkRaw, data.lang, true);
-        if (!result || isFallback(compareRaw)) return { ok: false as const, error: AWS_FAILURE_MESSAGE };
+        if (isFallback(checkRaw) || isFallback(compareRaw)) return UNAVAILABLE;
+        if (!result) return { ok: false as const, error: AWS_FAILURE_MESSAGE };
         return { ok: true as const, result: applyComparison(result, extractComparison(compareRaw)) };
       }
 
       const raw = await callAnalyze(checkBody);
+      if (isFallback(raw)) return UNAVAILABLE;
       const result = normalizeCheckResult(raw, data.lang, photos.length > 0);
       if (!result) return { ok: false as const, error: AWS_FAILURE_MESSAGE };
       return { ok: true as const, result };

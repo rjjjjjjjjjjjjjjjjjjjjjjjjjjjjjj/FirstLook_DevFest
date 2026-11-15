@@ -9,7 +9,7 @@ import { AppShell, StepHeader } from "@/components/app/AppShell";
 import { AuthGate } from "@/components/app/AuthGate";
 import { FirstUseGate } from "@/components/app/FirstUseGate";
 import { PhotoPicker } from "@/components/app/PhotoPicker";
-import { ResultView, AnalyzingSkeleton, RetakeView } from "@/components/app/ResultView";
+import { ResultView, AnalyzingSkeleton, RetakeView, AnalysisUnavailable } from "@/components/app/ResultView";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Slider } from "@/components/ui/slider";
@@ -63,6 +63,7 @@ function CheckFlow() {
   const [result, setResult] = useState<AiResult | null>(null);
   const [rawAi, setRawAi] = useState<AiResult | null>(null);
   const [error, setError] = useState("");
+  const [unavailable, setUnavailable] = useState(false);
   const [saveState, setSaveState] = useState<"idle" | "saving" | "saved" | "error">("idle");
   const [savedCheckId, setSavedCheckId] = useState<string | null>(null);
   const [emergencyReturn, setEmergencyReturn] = useState<"emergency" | "description">("emergency");
@@ -145,8 +146,10 @@ function CheckFlow() {
         risk: effectiveRisk, answers: currentAnswers, forWhom: "me", ageGroup: null, lang,
       },
     });
+    setUnavailable(false);
     if (!res.ok) {
       setError(res.error);
+      setUnavailable("unavailable" in res && res.unavailable === true);
       return go("error");
     }
     const final = applySafetyRules(res.result, currentAnswers, chips);
@@ -261,7 +264,8 @@ function CheckFlow() {
             </Bottom>
           </Screen>
         )}
-        {step === "error" && <Screen title={error}><Bottom><Button size="xl" onClick={run}>{t.tryAgain}</Button></Bottom></Screen>}
+        {step === "error" && unavailable && <AnalysisUnavailable onRetry={run} />}
+        {step === "error" && !unavailable && <Screen title={error}><Bottom><Button size="xl" onClick={run}>{t.tryAgain}</Button></Bottom></Screen>}
         {step === "result" && result && (
           <div className="pt-2">
             <ResultView result={result} actions={

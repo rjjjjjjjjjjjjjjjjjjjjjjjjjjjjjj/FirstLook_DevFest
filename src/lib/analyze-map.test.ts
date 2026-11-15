@@ -137,3 +137,8 @@ describe("fallback replies", () => {
     expect(_n({ severity_tier: "clinic", confidence: "low", reasoning: "x", source: "fallback" }, "en", true)).toBeNull();
   });
 });
+import { isFallback as _f } from "./analyze-map";
+describe("quota outage detection", () => {
+  it("flags the AWS placeholder reply", () => { expect(_f({ source: "fallback" })).toBe(true); });
+  it("does not flag a real reply", () => { expect(_f({ severity_tier: "clinic", source: "bedrock" })).toBe(false); });
+});
