@@ -1,6 +1,17 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
 
 const en = {
+  workspace: "Your workspace", workspaceLabel: "Your health workspace", privateWorkspace: "Private workspace",
+  navHome: "Home dashboard", navScreening: "New Screening", navLogs: "My Logs", navConnected: "Connected Health", navCare: "Find Care", navInsurance: "My Insurance", navReports: "Reports", navSettings: "Settings",
+  menu: "Open navigation", closeMenu: "Close navigation", clearerStep: "A clearer first step",
+  dashboardTitle: "Your health, in focus.", dashboardSub: "Check in with your body. Keep your care moving forward.", screeningHelp: "Screening help",
+  injuryLogs: "Injury logs", recoveryPlace: "Your recovery, in one place", connectedDevices: "Connected devices", connectTerms: "Connect on your terms", insurance: "Insurance", insuranceAdded: "Added", insuranceNotAdded: "Not added", reviewPlan: "Review your plan details",
+  screeningTitle: "Something doesn’t look or feel right?", screeningSub: "Start with a photo or describe what’s changed.", addInjuryPhoto: "Add an injury photo", chooseImage: "Choose an image from your device", imageFormats: "JPG, PNG or WebP", feelingLabel: "How are you feeling?", feelingPlaceholder: "Tell us about the pain, redness, swelling, or anything unusual…", startScreening: "Start a screening", recentLogs: "Recent injury logs", viewAll: "View all", yourControl: "Your health. Your control.", privateLogs: "Private logs, thoughtful guidance.", connectedPicture: "A more connected picture", connectedPictureSub: "Keep your health profile and check-ins together.", viewProfile: "View health profile", imageError: "This image could not be opened. Choose a JPG, PNG or WebP.",
+  devicesUnavailable: "No devices connected", devicesNote: "Wearable connections are not available yet. No device metrics have been imported.", profileConnection: "Your health profile", profileConnectionSub: "Review the details used to pre-fill your screening risk factors.",
+  insuranceSub: "Keep plan notes together. Verify benefits directly with your insurer.", providerLabel: "Insurance provider", planLabel: "Plan name", coinsurance: "Coinsurance (%)", saveInsurance: "Save plan details", insuranceSaved: "Plan details saved", deleteInsurance: "Remove plan details", insuranceDeleted: "Plan details removed", directoryLink: "Find your insurer’s directory", directoryNote: "Network participation and provider prices are not verified here.",
+  reportsSub: "Your screening history, ready to review or share.", exportReports: "Download summaries", totalScreenings: "Screenings", latestScreening: "Latest screening", noReports: "Your saved screenings will appear here.",
+  settingsSub: "Manage your account, language, and private health details.", languageLabel: "Language", accountLabel: "Account", privacyLabel: "Privacy & health profile", privacySettingsSub: "Review or delete your optional health profile. Delete individual screenings from My Logs.",
+
   call911: "Call 911",
   tabCheck: "Check", tabHistory: "History", tabHelp: "Help",
   langToggle: "Español",
@@ -209,6 +220,17 @@ const en = {
 type Dict = typeof en;
 
 const es: Dict = {
+  workspace: "Tu espacio", workspaceLabel: "Tu espacio de salud", privateWorkspace: "Espacio privado",
+  navHome: "Inicio", navScreening: "Nueva revisión", navLogs: "Mis registros", navConnected: "Salud conectada", navCare: "Buscar atención", navInsurance: "Mi seguro", navReports: "Informes", navSettings: "Configuración",
+  menu: "Abrir navegación", closeMenu: "Cerrar navegación", clearerStep: "Un primer paso más claro",
+  dashboardTitle: "Tu salud, en foco.", dashboardSub: "Revisa cómo te sientes. Sigue adelante con tu cuidado.", screeningHelp: "Ayuda para la revisión",
+  injuryLogs: "Registros de lesiones", recoveryPlace: "Tu recuperación, en un lugar", connectedDevices: "Dispositivos conectados", connectTerms: "Conecta a tu manera", insurance: "Seguro", insuranceAdded: "Agregado", insuranceNotAdded: "Sin agregar", reviewPlan: "Revisa los detalles de tu plan",
+  screeningTitle: "¿Algo no se ve o se siente bien?", screeningSub: "Empieza con una foto o describe qué cambió.", addInjuryPhoto: "Agregar una foto", chooseImage: "Elige una imagen de tu dispositivo", imageFormats: "JPG, PNG o WebP", feelingLabel: "¿Cómo te sientes?", feelingPlaceholder: "Cuéntanos sobre el dolor, enrojecimiento, hinchazón o algo inusual…", startScreening: "Iniciar una revisión", recentLogs: "Registros recientes", viewAll: "Ver todos", yourControl: "Tu salud. Tu control.", privateLogs: "Registros privados, orientación cuidadosa.", connectedPicture: "Una visión más conectada", connectedPictureSub: "Mantén tu perfil de salud y revisiones juntos.", viewProfile: "Ver perfil de salud", imageError: "No se pudo abrir la imagen. Elige JPG, PNG o WebP.",
+  devicesUnavailable: "Sin dispositivos conectados", devicesNote: "Las conexiones de dispositivos aún no están disponibles. No se han importado métricas.", profileConnection: "Tu perfil de salud", profileConnectionSub: "Revisa los detalles que completan tus factores de riesgo.",
+  insuranceSub: "Guarda notas de tu plan. Confirma beneficios con tu aseguradora.", providerLabel: "Aseguradora", planLabel: "Nombre del plan", coinsurance: "Coseguro (%)", saveInsurance: "Guardar detalles del plan", insuranceSaved: "Detalles guardados", deleteInsurance: "Quitar detalles del plan", insuranceDeleted: "Detalles eliminados", directoryLink: "Buscar directorio de tu aseguradora", directoryNote: "La red y los precios de proveedores no están verificados aquí.",
+  reportsSub: "Tu historial de revisiones, listo para revisar o compartir.", exportReports: "Descargar resúmenes", totalScreenings: "Revisiones", latestScreening: "Última revisión", noReports: "Tus revisiones guardadas aparecerán aquí.",
+  settingsSub: "Administra tu cuenta, idioma y detalles privados de salud.", languageLabel: "Idioma", accountLabel: "Cuenta", privacyLabel: "Privacidad y perfil de salud", privacySettingsSub: "Revisa o borra tu perfil opcional. Borra revisiones individuales en Mis registros.",
+
   call911: "Llamar al 911",
   tabCheck: "Revisar", tabHistory: "Historial", tabHelp: "Ayuda",
   langToggle: "English",
