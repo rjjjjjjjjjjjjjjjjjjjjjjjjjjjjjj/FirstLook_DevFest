@@ -64,9 +64,9 @@ describe("AWS analyze endpoint client", () => {
 
   it("gives up after the 20 second limit", async () => {
     vi.useFakeTimers();
-    stubEndpoint(() => new Promise((_resolve, reject) => {
-      // The client must pass an abort signal so a hung endpoint is cut off.
-      setTimeout(() => reject(new Error("no signal")), ANALYZE_TIMEOUT_MS + 1);
+    stubEndpoint((_url, init) => new Promise((_resolve, reject) => {
+      // A hung endpoint must be cut off by the signal the client passes to fetch.
+      init.signal?.addEventListener("abort", () => reject(new Error("The operation was aborted")));
     }));
     const pending = callAnalyze({}).catch((e) => e);
     await vi.advanceTimersByTimeAsync(ANALYZE_TIMEOUT_MS);
