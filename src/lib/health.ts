@@ -12,6 +12,7 @@ export type HealthProfile = {
 };
 
 export type ProfilePreferences = {
+  insurance?: { provider: string; plan: string; deductible: string; copay: string; coinsurance: string };
   acknowledgedAt?: string;
   healthProfile?: HealthProfile | null;
 };
