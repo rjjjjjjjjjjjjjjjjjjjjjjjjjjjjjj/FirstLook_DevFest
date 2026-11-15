@@ -3,13 +3,13 @@ import { ANALYZE_TIMEOUT_MS, AnalyzeError, callAnalyze } from "./ai.server";
 
 type FakeResponse = { ok: boolean; status: number; text: () => Promise<string> };
 
-function stubEndpoint(response: FakeResponse | (() => Promise<never>)) {
+function stubEndpoint(response: FakeResponse | ((url: string, init: RequestInit) => Promise<never>)) {
   vi.stubEnv("AWS_ANALYZE_URL", "https://lambda.example.test/analyze");
   vi.stubEnv("AWS_API_SECRET", "test-secret");
   const calls: { url: string; init: RequestInit }[] = [];
   vi.stubGlobal("fetch", (url: string, init: RequestInit) => {
     calls.push({ url, init });
-    return typeof response === "function" ? response() : Promise.resolve(response);
+    return typeof response === "function" ? response(url, init) : Promise.resolve(response);
   });
   return calls;
 }

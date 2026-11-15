@@ -14,17 +14,21 @@ export async function callAnalyze(body: unknown): Promise<unknown> {
   const secret = process.env["AWS_API_SECRET"];
   if (!url || !secret) throw new AnalyzeError(500, "AWS analysis is not configured.");
 
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), ANALYZE_TIMEOUT_MS);
   let res: Response;
   try {
     res = await fetch(url, {
       method: "POST",
       headers: { "Content-Type": "application/json", "x-api-secret": secret },
       body: JSON.stringify(body),
-      signal: AbortSignal.timeout(ANALYZE_TIMEOUT_MS),
+      signal: controller.signal,
     });
   } catch (e) {
     const reason = e instanceof Error ? e.message : String(e);
     throw new AnalyzeError(0, `AWS request failed: ${reason}`);
+  } finally {
+    clearTimeout(timer);
   }
 
   const text = await res.text().catch(() => "");
