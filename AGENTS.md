@@ -45,3 +45,4 @@ use the editor.
 - Shared workspace navigation lives in AppShell; desktop reserves a fixed sidebar and phones use a closable drawer, while content remains fluid rather than forced to a phone aspect ratio; why: all screens must remain readable without horizontal scrolling.
 - Dashboard screening drafts use the in-memory screening-draft handoff into the existing emergency-first flow; why: preserve safety gates without retaining unfinished medical details on shared devices.
 - Workspace pages reuse existing owner-only profile preferences for insurance notes and existing screenings for reports; unconfigured wearable or provider services must be labeled unavailable rather than simulated; why: avoid invented health, network, and pricing claims.
+- Nearby care search runs in `src/lib/places.functions.ts` (auth-required) via the Google Maps gateway; why: Maps credentials stay server-side and billable lookups need a signed-in user.
