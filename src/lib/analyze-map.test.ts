@@ -130,3 +130,10 @@ describe("AWS failure contract", () => {
     expect(AWS_FAILURE_MESSAGE).toBe("Something went wrong. Please try again.");
   });
 });
+
+import { normalizeCheckResult as _n } from "./analyze-map";
+describe("fallback replies", () => {
+  it("treats an AWS fallback reply as a failure, not a result", () => {
+    expect(_n({ severity_tier: "clinic", confidence: "low", reasoning: "x", source: "fallback" }, "en", true)).toBeNull();
+  });
+});
