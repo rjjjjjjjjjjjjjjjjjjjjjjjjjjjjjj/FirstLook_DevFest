@@ -7,3 +7,8 @@
 - [x] Update bilingual copy, tests, and verify the core flows in the preview.
 - [x] Replace the Gemini integration with the AWS analyze endpoint for both checks and two-photo comparisons, keeping the front end and response shape unchanged.
 - [x] Verify live AWS results in the preview: single check, follow-up comparison, and the fixed failure message path.
+
+# Reference design and mobile adaptation
+- [ ] Recreate the reference sidebar, breadcrumb, dashboard, upload area, and log cards with phone-friendly stacking.
+- [ ] Apply the same visual system to screening, results, history, and additional workspace pages without invented medical or provider data.
+- [ ] Verify navigation and screening handoff on desktop and narrow phones.
