@@ -7,7 +7,7 @@ import { toast } from "sonner";
 import { AppShell, StepHeader } from "@/components/app/AppShell";
 import { AuthGate } from "@/components/app/AuthGate";
 import { PhotoPicker } from "@/components/app/PhotoPicker";
-import { ResultView, AnalyzingSkeleton } from "@/components/app/ResultView";
+import { ResultView, AnalyzingSkeleton, AnalysisUnavailable } from "@/components/app/ResultView";
 import { TierBadge } from "@/components/app/TierBadge";
 import { Button } from "@/components/ui/button";
 import { useI18n } from "@/lib/i18n";
@@ -48,7 +48,7 @@ function Detail() {
   const qc = useQueryClient();
   const analyze = useServerFn(analyzeWound);
   const { data } = useWounds();
-  const [mode, setMode] = useState<"view" | "follow" | "analyzing">("view");
+  const [mode, setMode] = useState<"view" | "follow" | "analyzing" | "unavailable">("view");
   const [photo, setPhoto] = useState<string | null>(null);
   const wound = data?.find((w) => w.id === woundId);
   if (!data) return <AppShell><p className="pt-10 text-muted-foreground">{t.loading}</p></AppShell>;
@@ -68,6 +68,7 @@ function Detail() {
         mode: "followup", images, answers: last.answers, description: last.answers.description ?? "",
         risk: last.answers.risk, forWhom: last.for_whom as "me", ageGroup: last.age_group, lang,
       } });
+      if (!res.ok && "unavailable" in res && res.unavailable) { setMode("unavailable"); return; }
       if (!res.ok) throw new Error(res.error);
       const final = applySafetyRules(res.result, last.answers);
       if (final.comparison?.change === "worse") final.severity_tier = final.severity_tier === "self_care" ? "clinic" : final.severity_tier;
@@ -119,6 +120,7 @@ function Detail() {
   };
 
   if (mode === "analyzing") return <AppShell hideTabs><AnalyzingSkeleton /></AppShell>;
+  if (mode === "unavailable") return <AppShell hideTabs><StepHeader onBack={() => setMode("follow")} /><AnalysisUnavailable onRetry={runFollowup} /></AppShell>;
   if (mode === "follow")
     return (
       <AppShell hideTabs>

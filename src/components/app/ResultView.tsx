@@ -1,4 +1,4 @@
-import { Check, AlertTriangle, MapPin, CalendarClock } from "lucide-react";
+import { Check, AlertTriangle, MapPin, CalendarClock, CloudOff, Phone } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import type { ReactNode } from "react";
 import type { AiResult } from "@/lib/triage";
@@ -94,6 +94,34 @@ export function RetakeView({ onRetake, onContinue }: { onRetake: () => void; onC
       </ul>
       <Button size="xl" onClick={onRetake}>{t.retakeBtn}</Button>
       <Button size="xl" variant="outline" onClick={onContinue}>{t.seeCautious}</Button>
+    </div>
+  );
+}
+
+/** Shown when the analysis service is temporarily out of capacity. */
+export function AnalysisUnavailable({ onRetry }: { onRetry: () => void }) {
+  const { t } = useI18n();
+  return (
+    <div className="step-in space-y-4 pt-4" role="status">
+      <section className="card-soft p-5">
+        <div className="flex items-center gap-2 font-semibold text-primary"><CloudOff className="size-5" aria-hidden />{t.unavailableTag}</div>
+        <h1 className="mt-2 text-2xl font-bold leading-tight">{t.unavailableTitle}</h1>
+        <p className="mt-2 text-foreground/90">{t.unavailableSub}</p>
+      </section>
+      <section className="rounded-2xl bg-tier-er-soft p-5">
+        <h2 className="flex items-center gap-2 font-semibold text-tier-er"><Phone className="size-5" aria-hidden />{t.unavailableErTitle}</h2>
+        <ul className="mt-2 space-y-1.5">{t.unavailableEr.map((x) => <li key={x} className="flex gap-2.5"><AlertTriangle className="mt-0.5 size-5 shrink-0 text-tier-er" aria-hidden />{x}</li>)}</ul>
+      </section>
+      <section className="card-soft p-5">
+        <h2 className="font-semibold">{t.unavailableSoonTitle}</h2>
+        <ul className="mt-2 space-y-1.5">{t.unavailableSoon.map((x) => <li key={x} className="flex gap-2.5"><Check className="mt-0.5 size-5 shrink-0 text-tier-urgent" aria-hidden />{x}</li>)}</ul>
+        <p className="mt-3 text-muted-foreground">{t.unavailableHome}</p>
+      </section>
+      <div className="space-y-3 pt-1">
+        <Button size="xl" asChild><Link to="/care"><MapPin aria-hidden /> {t.findCare}</Link></Button>
+        <Button size="xl" variant="outline" onClick={onRetry}>{t.tryAgainLater}</Button>
+      </div>
+      <p className="text-center text-sm text-muted-foreground">{t.disclaimerShort}</p>
     </div>
   );
 }
