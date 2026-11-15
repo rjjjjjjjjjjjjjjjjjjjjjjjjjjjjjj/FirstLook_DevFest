@@ -14,6 +14,14 @@ function stubEndpoint(response: FakeResponse | ((url: string, init: RequestInit)
   return calls;
 }
 
+async function failure(promise: Promise<unknown>): Promise<AnalyzeError> {
+  const err = await promise.then((value) => {
+    throw new Error(`expected a failure, got ${JSON.stringify(value)}`);
+  }, (reason: unknown) => reason);
+  expect(err).toBeInstanceOf(AnalyzeError);
+  return err as AnalyzeError;
+}
+
 afterEach(() => {
   vi.unstubAllEnvs();
   vi.unstubAllGlobals();
@@ -33,32 +41,28 @@ describe("AWS analyze endpoint client", () => {
 
   it("treats a 401 as a failure", async () => {
     stubEndpoint({ ok: false, status: 401, text: async () => "denied" });
-    const err = await callAnalyze({}).catch((e) => e);
-    expect(err).toBeInstanceOf(AnalyzeError);
+    const err = await failure(callAnalyze({}));
     expect(err.status).toBe(401);
     expect(err.message).toContain("401");
   });
 
   it("treats a refused request as a failure", async () => {
     stubEndpoint(() => Promise.reject(new Error("socket hang up")));
-    const err = await callAnalyze({}).catch((e) => e);
-    expect(err).toBeInstanceOf(AnalyzeError);
+    const err = await failure(callAnalyze({}));
     expect(err.status).toBe(0);
     expect(err.message).toContain("socket hang up");
   });
 
   it("treats unreadable JSON as a failure", async () => {
     stubEndpoint({ ok: true, status: 200, text: async () => "not json" });
-    const err = await callAnalyze({}).catch((e) => e);
-    expect(err).toBeInstanceOf(AnalyzeError);
+    const err = await failure(callAnalyze({}));
     expect(err.status).toBe(502);
   });
 
   it("fails when the endpoint is not configured", async () => {
     vi.stubEnv("AWS_ANALYZE_URL", "");
     vi.stubEnv("AWS_API_SECRET", "");
-    const err = await callAnalyze({}).catch((e) => e);
-    expect(err).toBeInstanceOf(AnalyzeError);
+    const err = await failure(callAnalyze({}));
     expect(err.status).toBe(500);
   });
 
@@ -68,10 +72,9 @@ describe("AWS analyze endpoint client", () => {
       // A hung endpoint must be cut off by the signal the client passes to fetch.
       init.signal?.addEventListener("abort", () => reject(new Error("The operation was aborted")));
     }));
-    const pending = callAnalyze({}).catch((e) => e);
+    const pending = callAnalyze({});
     await vi.advanceTimersByTimeAsync(ANALYZE_TIMEOUT_MS);
-    const err = await pending;
-    expect(err).toBeInstanceOf(AnalyzeError);
+    const err = await failure(pending);
     expect(err.status).toBe(0);
     expect(err.message).toContain("aborted");
   });
