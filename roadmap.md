@@ -5,4 +5,5 @@
 - [x] Add an optional owner-only My Health Profile with pre-fill/opt-out and data deletion.
 - [x] Add result cost estimates, insurer questions, emergency cost messaging, and uninsured low-cost options.
 - [x] Update bilingual copy, tests, and verify the core flows in the preview.
-- [ ] Confirm a live Gemini result when Google stops returning 429 "high demand" responses (external availability).
+- [x] Replace the Gemini integration with the AWS analyze endpoint for both checks and two-photo comparisons, keeping the front end and response shape unchanged.
+- [x] Verify live AWS results in the preview: single check, follow-up comparison, and the fixed failure message path.

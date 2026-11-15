@@ -32,8 +32,10 @@ use the editor.
 ## Project rules
 - Safety rules (emergency chips, fever + redness/pus floor, one-level risk bump, low-confidence bump, user-reported worsening) live in `src/lib/triage.ts` and run after every AI result; why: AI output must never lower a rule-based tier.
 - Health profiles and first-use acceptance live in owner-only `profiles.preferences`; map only relevant risk flags into analysis requests; why: full medical profiles must never be sent to AI.
-- Photo analysis runs in `src/lib/analyze.functions.ts` (auth-required server fn) calling the Google Gemini API directly with `GEMINI_API_KEY` via `src/lib/ai.server.ts`; why: user chose direct Gemini over the gateway; keeps the key server-side and blocks anonymous AI spend.
-- Validate photo/symptom inputs and Gemini JSON with `src/lib/analysis-schema.ts`; why: incomplete model output must not be converted into usable medical advice.
+- Photo analysis runs in `src/lib/analyze.functions.ts` (auth-required server fn) calling the AWS analyze endpoint from `AWS_ANALYZE_URL` with the `x-api-secret` header from `AWS_API_SECRET`, via `src/lib/ai.server.ts`; why: user chose AWS for all AI, and both values must stay server-side.
+- Map app input to the AWS body and the AWS reply back to the result in `src/lib/analyze-map.ts`; a worse or unclear compare verdict floors the tier at clinic; why: the endpoint contract and the tier floor must stay testable without network or secrets.
+- Validate photo/symptom inputs and the AWS reply JSON with `src/lib/analysis-schema.ts`; why: incomplete model output must not be converted into usable medical advice.
+- Every AWS failure (401, timeout over 20s, unreadable reply) returns the fixed "Something went wrong. Please try again." message and logs the real error server-side; why: the front end must never see provider details.
 - All UI text lives in `src/lib/i18n.tsx` (en/es dictionaries); why: every screen and AI reply must follow the language toggle.
 - Photo paths starting with `/` are static demo images; others are private `photos` bucket paths under `{userId}/`.
 - Profiles are created by the auth signup trigger and are owner-readable/updatable only; why: profile provisioning must not depend on a confirmed browser session.
