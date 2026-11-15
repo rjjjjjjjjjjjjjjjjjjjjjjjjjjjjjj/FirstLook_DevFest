@@ -1,6 +1,7 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useState } from "react";
+import { takeScreeningDraft } from "@/lib/screening-draft";
 import { useQueryClient } from "@tanstack/react-query";
 import { Phone, Check as CheckIcon, Save, TrendingDown, HeartHandshake, AlertCircle } from "lucide-react";
 import { toast } from "sonner";
@@ -50,10 +51,11 @@ function CheckFlow() {
   const qc = useQueryClient();
   const analyze = useServerFn(analyzeWound);
   const { data: preferences } = useProfilePreferences();
+  const [draft] = useState(takeScreeningDraft);
   const [step, setStep] = useState<Step>("emergency");
   const [chips, setChips] = useState<string[]>([]);
-  const [photo, setPhoto] = useState<string | null>(null);
-  const [description, setDescription] = useState("");
+  const [photo, setPhoto] = useState<string | null>(draft?.photo ?? null);
+  const [description, setDescription] = useState(draft?.description ?? "");
   const [answers, setAnswers] = useState<Answers>({ ...DEFAULT_ANSWERS, risk: { ...DEFAULT_RISK } });
   const [manualRisk, setManualRisk] = useState<RiskFactors>({ ...DEFAULT_RISK });
   const [useProfile, setUseProfile] = useState(true);
@@ -343,7 +345,7 @@ function Symptoms({ answers, setAnswers, risk, onRisk, hasHealthProfile, useProf
           <p className="text-sm text-muted-foreground">{t.riskSub}</p>
         </div>
         {hasHealthProfile && (
-          <div className="flex min-h-14 items-center justify-between gap-3 rounded-full bg-secondary px-4 py-2 text-sm font-semibold text-secondary-foreground">
+          <div className="grid min-h-14 grid-cols-[minmax(0,1fr)_auto] items-center gap-3 rounded-lg bg-secondary px-4 py-2 text-sm font-semibold text-secondary-foreground">
             <span>{useProfile ? t.usingHealthProfile : t.notForThisCheck}</span>
             <span className="flex items-center gap-2">
               <span className="text-xs font-medium">{t.notForThisCheck}</span>

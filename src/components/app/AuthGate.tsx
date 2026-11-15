@@ -53,7 +53,7 @@ export function AuthGate({ children }: { children: ReactNode }) {
 
   return (
     <AppShell hideTabs>
-      <div className="step-in space-y-6 pt-8">
+      <div className="step-in mx-auto max-w-[460px] space-y-6 pt-8">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">{t.signInTitle}</h1>
           <p className="mt-2 text-muted-foreground">{t.signInSub}</p>

@@ -1,92 +1,63 @@
 import { Link, useLocation } from "@tanstack/react-router";
-import { Phone, Search, Clock3, HelpCircle, Languages } from "lucide-react";
-import type { ReactNode } from "react";
+import { Phone, Languages, Plus, Home, ScanLine, ClipboardList, HeartPulse, MapPin, ShieldCheck, FileText, Settings, Menu, X, ChevronRight, ArrowLeft } from "lucide-react";
+import { useState, type ReactNode } from "react";
 import { useI18n } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 
 export function AppShell({ children, hideTabs }: { children: ReactNode; hideTabs?: boolean }) {
   const { t, lang, setLang } = useI18n();
   const path = useLocation({ select: (l) => l.pathname });
-  const tabs = [
-    { to: "/" as const, label: t.tabCheck, icon: Search, active: path === "/" || path.startsWith("/check") || path.startsWith("/care") },
-    { to: "/history" as const, label: t.tabHistory, icon: Clock3, active: path.startsWith("/history") },
-    { to: "/help" as const, label: t.tabHelp, icon: HelpCircle, active: path.startsWith("/help") },
+  const [open, setOpen] = useState(false);
+  const items = [
+    { to: "/" as const, label: t.navHome, icon: Home },
+    { to: "/check" as const, label: t.navScreening, icon: ScanLine },
+    { to: "/history" as const, label: t.navLogs, icon: ClipboardList },
+    { to: "/connected" as const, label: t.navConnected, icon: HeartPulse },
+    { to: "/care" as const, label: t.navCare, icon: MapPin },
+    { to: "/insurance" as const, label: t.navInsurance, icon: ShieldCheck },
+    { to: "/reports" as const, label: t.navReports, icon: FileText },
+    { to: "/settings" as const, label: t.navSettings, icon: Settings },
   ];
+  const current = items.find(i => i.to === "/" ? path === "/" : path.startsWith(i.to));
+  const wide = path === "/" || ["/history", "/connected", "/insurance", "/reports", "/settings"].includes(path);
   return (
-    <div className="mx-auto flex min-h-dvh max-w-[480px] flex-col">
-      <header className="no-print sticky top-0 z-20 flex items-center justify-between gap-2 bg-background/95 px-4 py-3 backdrop-blur">
-        <Link to="/" className="flex items-center gap-2 text-lg font-bold tracking-tight text-foreground">
-          <span className="grid size-8 place-items-center rounded-xl bg-primary text-primary-foreground" aria-hidden>
-            <Search className="size-4" />
-          </span>
-          FirstLook
-        </Link>
-        <div className="flex items-center gap-1">
-          <button
-            type="button"
-            onClick={() => setLang(lang === "en" ? "es" : "en")}
-            className="inline-flex min-h-12 items-center gap-1.5 rounded-xl px-3 text-sm font-medium text-muted-foreground hover:bg-muted"
-            aria-label={lang === "en" ? "Cambiar a español" : "Switch to English"}
-          >
-            <Languages className="size-4" aria-hidden />
-            {t.langToggle}
-          </button>
-          <a
-            href="tel:911"
-            className="inline-flex min-h-12 items-center gap-1.5 rounded-xl px-3 text-sm font-semibold text-destructive hover:bg-tier-er-soft"
-          >
-            <Phone className="size-4" aria-hidden />
-            {t.call911}
-          </a>
+    <div className="min-h-dvh">
+      {open && <Button variant="ghost" className="no-print fixed inset-0 z-30 h-dvh w-full rounded-none bg-foreground/30 lg:hidden" aria-label={t.closeMenu} onClick={() => setOpen(false)} />}
+      <aside className={cn("no-print fixed inset-y-0 left-0 z-40 flex w-60 flex-col border-r bg-card px-4 transition-transform lg:translate-x-0", open ? "translate-x-0" : "-translate-x-full")}>
+        <div className="flex h-24 items-center justify-between px-2">
+          <Link to="/" onClick={() => setOpen(false)} className="flex min-w-0 items-center gap-2.5 text-lg font-bold"><span className="grid size-8 shrink-0 place-items-center rounded-md bg-primary text-primary-foreground"><Plus className="size-5" /></span>FIRSTLOOK.</Link>
+          <Button variant="ghost" size="icon" className="shrink-0 lg:hidden" aria-label={t.closeMenu} onClick={() => setOpen(false)}><X /></Button>
         </div>
-      </header>
-      <main className={cn("flex-1 px-4", hideTabs ? "pb-6" : "pb-28")}>{children}</main>
-      {!hideTabs && (
-        <nav className="no-print fixed inset-x-0 bottom-0 z-20 border-t bg-card/95 backdrop-blur" aria-label="Main">
-          <div className="mx-auto grid max-w-[480px] grid-cols-3">
-            {tabs.map((tab) => (
-              <Link
-                key={tab.to}
-                to={tab.to}
-                className={cn(
-                  "flex min-h-16 flex-col items-center justify-center gap-1 text-sm font-medium",
-                  tab.active ? "text-primary" : "text-muted-foreground",
-                )}
-                aria-current={tab.active ? "page" : undefined}
-              >
-                <tab.icon className="size-6" aria-hidden />
-                {tab.label}
-              </Link>
-            ))}
-          </div>
+        <p className="mb-3 mt-4 px-3 text-[10px] font-bold uppercase text-muted-foreground">{t.workspaceLabel}</p>
+        <nav aria-label={t.workspace} className="space-y-1">
+          {items.map(item => <Link key={item.to} to={item.to} onClick={() => setOpen(false)} aria-current={current?.to === item.to ? "page" : undefined} className={cn("flex min-h-11 items-center gap-3 rounded-md px-3 text-sm font-medium", current?.to === item.to ? "bg-secondary text-primary" : "text-muted-foreground hover:bg-muted")}><item.icon className="size-[18px] shrink-0" />{item.label}</Link>)}
         </nav>
-      )}
+        <div className="mt-auto border-t px-3 py-6"><p className="flex items-center gap-2 text-xs font-semibold"><ShieldCheck className="size-4 text-primary" />{t.yourControl}</p><p className="ml-6 mt-1 text-xs text-muted-foreground">{t.privateLogs}</p></div>
+      </aside>
+      <div className="min-w-0 lg:ml-60">
+        <header className="no-print sticky top-0 z-20 border-b bg-card">
+          <div className="grid min-h-16 grid-cols-[minmax(0,1fr)_auto] items-center gap-2 px-4 sm:px-8">
+            <div className="flex min-w-0 items-center gap-2">
+              <Button size="icon" variant="ghost" className="shrink-0 lg:hidden" aria-label={t.menu} onClick={() => setOpen(true)}><Menu /></Button>
+              <span className="hidden text-xs text-muted-foreground sm:inline">{t.workspace}</span><ChevronRight className="hidden size-3 text-muted-foreground sm:block" />
+              <span className="truncate text-sm font-bold sm:hidden">FIRSTLOOK.</span>
+              <span className="hidden truncate text-xs font-semibold sm:block">{current?.label ?? t.profileTitle}</span>
+            </div>
+            <div className="flex shrink-0 items-center gap-1">
+              <span className="mr-3 hidden items-center gap-2 text-xs text-muted-foreground xl:flex"><span className="size-1.5 rounded-full bg-tier-home" />{t.privateWorkspace}</span>
+              <Button variant="ghost" size="icon" onClick={() => setLang(lang === "en" ? "es" : "en")} aria-label={t.langToggle} title={t.langToggle}><Languages /></Button>
+              <Button variant="ghost" asChild className="min-h-11 px-2 text-xs text-destructive"><a href="tel:911"><Phone className="size-4" />{t.call911}</a></Button>
+            </div>
+          </div>
+        </header>
+        <main className={cn("mx-auto min-w-0 px-4 pb-10 sm:px-8", wide ? "max-w-[1240px]" : "max-w-[760px]", !hideTabs && "pb-12")}>{children}</main>
+      </div>
     </div>
   );
 }
 
 export function StepHeader({ step, total, onBack }: { step?: number | undefined; total?: number | undefined; onBack: () => void }) {
   const { t } = useI18n();
-  return (
-    <div className="flex items-center gap-3 py-2">
-      <button
-        type="button"
-        onClick={onBack}
-        className="grid size-12 place-items-center rounded-xl hover:bg-muted"
-        aria-label={t.back}
-      >
-        <svg viewBox="0 0 24 24" className="size-6" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden>
-          <path d="M15 18l-6-6 6-6" strokeLinecap="round" strokeLinejoin="round" />
-        </svg>
-      </button>
-      {step && total ? (
-        <div className="flex-1">
-          <p className="text-sm font-medium text-muted-foreground">{t.stepOf(step, total)}</p>
-          <div className="mt-1 h-1.5 rounded-full bg-muted" role="progressbar" aria-valuenow={step} aria-valuemin={1} aria-valuemax={total}>
-            <div className="h-full rounded-full bg-primary transition-all" style={{ width: `${(step / total) * 100}%` }} />
-          </div>
-        </div>
-      ) : null}
-    </div>
-  );
+  return <div className="flex items-center gap-3 py-4"><Button type="button" size="icon" variant="ghost" className="size-11 shrink-0" onClick={onBack} aria-label={t.back}><ArrowLeft /></Button>{step && total ? <div className="min-w-0 flex-1"><p className="text-sm font-medium text-muted-foreground">{t.stepOf(step, total)}</p><div className="mt-2 h-1 rounded-full bg-muted" role="progressbar" aria-valuenow={step} aria-valuemin={1} aria-valuemax={total}><div className="h-full rounded-full bg-primary transition-all" style={{ width: `${step / total * 100}%` }} /></div></div> : null}</div>;
 }

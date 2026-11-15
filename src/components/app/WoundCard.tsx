@@ -14,12 +14,12 @@ export function WoundCard({ wound }: { wound: WoundRow }) {
     <Link
       to="/history/$woundId"
       params={{ woundId: wound.id }}
-      className="card-soft flex items-center gap-3 p-3 hover:ring-2 hover:ring-primary/30"
+      className="card-soft grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3 p-4 hover:border-primary/40"
     >
       {url ? (
-        <img src={url} alt="" className="size-16 shrink-0 rounded-xl object-cover" />
+        <img src={url} alt="" className="size-14 shrink-0 rounded-md object-cover" />
       ) : (
-        <div className="grid size-16 shrink-0 place-items-center rounded-xl bg-muted text-muted-foreground">
+        <div className="grid size-14 shrink-0 place-items-center rounded-md bg-muted text-muted-foreground">
           <ImageOff className="size-6" aria-hidden />
         </div>
       )}
@@ -33,7 +33,7 @@ export function WoundCard({ wound }: { wound: WoundRow }) {
         <p className="mt-1 truncate font-medium">{wound.title}</p>
         <p className="truncate text-sm text-muted-foreground">{last.summary}</p>
       </div>
-      <ChevronRight className="size-5 text-muted-foreground" aria-hidden />
+      <ChevronRight className="size-5 shrink-0 text-muted-foreground" aria-hidden />
     </Link>
   );
 }

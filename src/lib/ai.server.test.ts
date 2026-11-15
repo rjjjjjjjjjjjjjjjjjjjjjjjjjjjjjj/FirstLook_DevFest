@@ -33,10 +33,12 @@ describe("AWS analyze endpoint client", () => {
     const calls = stubEndpoint({ ok: true, status: 200, text: async () => '{"severity_tier":"clinic"}' });
     const body = { user_id: "u1", description: "Scraped my knee." };
     expect(await callAnalyze(body)).toEqual({ severity_tier: "clinic" });
-    expect(calls[0]!.url).toBe("https://lambda.example.test/analyze");
-    expect(calls[0]!.init.method).toBe("POST");
-    expect(new Headers(calls[0]!.init.headers).get("x-api-secret")).toBe("test-secret");
-    expect(JSON.parse(String(calls[0]!.init.body))).toEqual(body);
+    const call = calls[0];
+    if (!call) throw new Error("Expected an AWS request");
+    expect(call.url).toBe("https://lambda.example.test/analyze");
+    expect(call.init.method).toBe("POST");
+    expect(new Headers(call.init.headers).get("x-api-secret")).toBe("test-secret");
+    expect(JSON.parse(String(call.init.body))).toEqual(body);
   });
 
   it("treats a 401 as a failure", async () => {
@@ -72,9 +74,9 @@ describe("AWS analyze endpoint client", () => {
       // A hung endpoint must be cut off by the signal the client passes to fetch.
       init.signal?.addEventListener("abort", () => reject(new Error("The operation was aborted")));
     }));
-    const pending = callAnalyze({});
+    const pending = failure(callAnalyze({}));
     await vi.advanceTimersByTimeAsync(ANALYZE_TIMEOUT_MS);
-    const err = await failure(pending);
+    const err = await pending;
     expect(err.status).toBe(0);
     expect(err.message).toContain("aborted");
   });

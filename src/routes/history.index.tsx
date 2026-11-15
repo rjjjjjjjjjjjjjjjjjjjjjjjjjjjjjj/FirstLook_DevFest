@@ -32,8 +32,8 @@ function History() {
   return (
     <AppShell>
       <div className="step-in space-y-4 pt-6">
-        <div className="flex items-center justify-between gap-3">
-          <h1 className="text-3xl font-bold tracking-tight">{t.historyTitle}</h1>
+        <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3">
+          <h1 className="text-3xl font-bold">{t.navLogs}</h1>
           <Button variant="outline" size="tap" asChild>
             <Link to="/profile" aria-label={t.profileTitle}><UserRound aria-hidden /><span className="sr-only sm:not-sr-only">{t.profileTitle}</span></Link>
           </Button>
@@ -41,7 +41,7 @@ function History() {
         {isLoading ? (
           <p className="text-muted-foreground">{t.loading}</p>
         ) : data && data.length > 0 ? (
-          data.map((w) => <WoundCard key={w.id} wound={w} />)
+          <div className="grid gap-3 xl:grid-cols-2">{data.map((w) => <WoundCard key={w.id} wound={w} />)}</div>
         ) : (
           <div className="card-soft space-y-4 p-6 text-center">
             <ClipboardList className="mx-auto size-10 text-primary" aria-hidden />
