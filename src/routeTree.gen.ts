@@ -12,8 +12,12 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as CareRouteImport } from './routes/care'
 import { Route as CheckRouteImport } from './routes/check'
+import { Route as ConnectedRouteImport } from './routes/connected'
 import { Route as HelpRouteImport } from './routes/help'
+import { Route as InsuranceRouteImport } from './routes/insurance'
 import { Route as ProfileRouteImport } from './routes/profile'
+import { Route as ReportsRouteImport } from './routes/reports'
+import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as HistoryIndexRouteImport } from './routes/history.index'
 import { Route as HistoryWoundIdRouteImport } from './routes/history.$woundId'
 
@@ -32,14 +36,34 @@ const CheckRoute = CheckRouteImport.update({
   path: '/check',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ConnectedRoute = ConnectedRouteImport.update({
+  id: '/connected',
+  path: '/connected',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const HelpRoute = HelpRouteImport.update({
   id: '/help',
   path: '/help',
   getParentRoute: () => rootRouteImport,
 } as any)
+const InsuranceRoute = InsuranceRouteImport.update({
+  id: '/insurance',
+  path: '/insurance',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ProfileRoute = ProfileRouteImport.update({
   id: '/profile',
   path: '/profile',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ReportsRoute = ReportsRouteImport.update({
+  id: '/reports',
+  path: '/reports',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SettingsRoute = SettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
   getParentRoute: () => rootRouteImport,
 } as any)
 const HistoryIndexRoute = HistoryIndexRouteImport.update({
@@ -57,8 +81,12 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/care': typeof CareRoute
   '/check': typeof CheckRoute
+  '/connected': typeof ConnectedRoute
   '/help': typeof HelpRoute
+  '/insurance': typeof InsuranceRoute
   '/profile': typeof ProfileRoute
+  '/reports': typeof ReportsRoute
+  '/settings': typeof SettingsRoute
   '/history/$woundId': typeof HistoryWoundIdRoute
   '/history/': typeof HistoryIndexRoute
 }
@@ -66,8 +94,12 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/care': typeof CareRoute
   '/check': typeof CheckRoute
+  '/connected': typeof ConnectedRoute
   '/help': typeof HelpRoute
+  '/insurance': typeof InsuranceRoute
   '/profile': typeof ProfileRoute
+  '/reports': typeof ReportsRoute
+  '/settings': typeof SettingsRoute
   '/history/$woundId': typeof HistoryWoundIdRoute
   '/history': typeof HistoryIndexRoute
 }
@@ -76,8 +108,12 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/care': typeof CareRoute
   '/check': typeof CheckRoute
+  '/connected': typeof ConnectedRoute
   '/help': typeof HelpRoute
+  '/insurance': typeof InsuranceRoute
   '/profile': typeof ProfileRoute
+  '/reports': typeof ReportsRoute
+  '/settings': typeof SettingsRoute
   '/history/$woundId': typeof HistoryWoundIdRoute
   '/history/': typeof HistoryIndexRoute
 }
@@ -87,8 +123,12 @@ export interface FileRouteTypes {
     | '/'
     | '/care'
     | '/check'
+    | '/connected'
     | '/help'
+    | '/insurance'
     | '/profile'
+    | '/reports'
+    | '/settings'
     | '/history/$woundId'
     | '/history/'
   fileRoutesByTo: FileRoutesByTo
@@ -96,8 +136,12 @@ export interface FileRouteTypes {
     | '/'
     | '/care'
     | '/check'
+    | '/connected'
     | '/help'
+    | '/insurance'
     | '/profile'
+    | '/reports'
+    | '/settings'
     | '/history/$woundId'
     | '/history'
   id:
@@ -105,8 +149,12 @@ export interface FileRouteTypes {
     | '/'
     | '/care'
     | '/check'
+    | '/connected'
     | '/help'
+    | '/insurance'
     | '/profile'
+    | '/reports'
+    | '/settings'
     | '/history/$woundId'
     | '/history/'
   fileRoutesById: FileRoutesById
@@ -115,8 +163,12 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   CareRoute: typeof CareRoute
   CheckRoute: typeof CheckRoute
+  ConnectedRoute: typeof ConnectedRoute
   HelpRoute: typeof HelpRoute
+  InsuranceRoute: typeof InsuranceRoute
   ProfileRoute: typeof ProfileRoute
+  ReportsRoute: typeof ReportsRoute
+  SettingsRoute: typeof SettingsRoute
   HistoryWoundIdRoute: typeof HistoryWoundIdRoute
   HistoryIndexRoute: typeof HistoryIndexRoute
 }
@@ -144,6 +196,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CheckRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/connected': {
+      id: '/connected'
+      path: '/connected'
+      fullPath: '/connected'
+      preLoaderRoute: typeof ConnectedRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/help': {
       id: '/help'
       path: '/help'
@@ -151,11 +210,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof HelpRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/insurance': {
+      id: '/insurance'
+      path: '/insurance'
+      fullPath: '/insurance'
+      preLoaderRoute: typeof InsuranceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/profile': {
       id: '/profile'
       path: '/profile'
       fullPath: '/profile'
       preLoaderRoute: typeof ProfileRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reports': {
+      id: '/reports'
+      path: '/reports'
+      fullPath: '/reports'
+      preLoaderRoute: typeof ReportsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/settings': {
+      id: '/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof SettingsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/history/': {
@@ -179,8 +259,12 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   CareRoute: CareRoute,
   CheckRoute: CheckRoute,
+  ConnectedRoute: ConnectedRoute,
   HelpRoute: HelpRoute,
+  InsuranceRoute: InsuranceRoute,
   ProfileRoute: ProfileRoute,
+  ReportsRoute: ReportsRoute,
+  SettingsRoute: SettingsRoute,
   HistoryWoundIdRoute: HistoryWoundIdRoute,
   HistoryIndexRoute: HistoryIndexRoute,
 }
