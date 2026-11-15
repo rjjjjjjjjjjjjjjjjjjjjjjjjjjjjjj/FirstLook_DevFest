@@ -41,3 +41,7 @@ use the editor.
 - Profiles are created by the auth signup trigger and are owner-readable/updatable only; why: profile provisioning must not depend on a confirmed browser session.
 - Wound checks must reference an owned wound and an owned photo path; why: row ownership alone does not validate linked resources.
 - Clear the query cache on account identity changes; why: previous-account history must never remain visible after switching users.
+
+- Shared workspace navigation lives in AppShell; desktop reserves a fixed sidebar and phones use a closable drawer, while content remains fluid rather than forced to a phone aspect ratio; why: all screens must remain readable without horizontal scrolling.
+- Dashboard screening drafts use the in-memory screening-draft handoff into the existing emergency-first flow; why: preserve safety gates without retaining unfinished medical details on shared devices.
+- Workspace pages reuse existing owner-only profile preferences for insurance notes and existing screenings for reports; unconfigured wearable or provider services must be labeled unavailable rather than simulated; why: avoid invented health, network, and pricing claims.
