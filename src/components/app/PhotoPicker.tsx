@@ -32,7 +32,7 @@ export function PhotoPicker({ value, onChange }: { value: string | null; onChang
         className={
           value
             ? "min-h-12 w-full rounded-xl text-base font-medium text-primary hover:bg-secondary"
-            : "card-soft flex aspect-[4/3] w-full flex-col items-center justify-center gap-3 border-2 border-dashed border-primary/30 text-primary hover:bg-secondary"
+            : "card-soft flex h-auto max-h-[340px] aspect-[4/3] w-full flex-col items-center justify-center gap-3 border-2 border-dashed border-primary/30 px-4 py-6 text-primary hover:bg-secondary [&_svg]:size-12"
         }
       >
         {!value && <Camera className="size-12" aria-hidden />}
