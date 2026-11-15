@@ -100,6 +100,10 @@ function unwrap(raw: unknown): unknown {
   return value;
 }
 
+export function isFallback(value: unknown): boolean {
+  return Boolean(value && typeof value === "object" && (value as { source?: unknown }).source === "fallback");
+}
+
 /**
  * Fill every field the front end renders, so a short AWS reply
  * (severity_tier + reasoning only) never reaches the UI as an empty result.
@@ -107,7 +111,11 @@ function unwrap(raw: unknown): unknown {
  * in triage.ts then raises to at least clinic.
  */
 export function normalizeCheckResult(raw: unknown, lang: "en" | "es", hasPhoto: boolean): AiResult | null {
-  const parsed = AnalyzeResponse.safeParse(unwrap(raw));
+  const value = unwrap(raw);
+  // The AWS side marks canned "couldn't analyze" replies (e.g. its AI quota ran out)
+  // as source: "fallback"; treat those as a failure, not as a diagnosis.
+  if (isFallback(value)) return null;
+  const parsed = AnalyzeResponse.safeParse(value);
   if (!parsed.success) return null;
   const r = parsed.data;
   const result: AiResult = {
