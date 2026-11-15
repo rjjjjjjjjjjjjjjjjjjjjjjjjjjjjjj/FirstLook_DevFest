@@ -56,7 +56,7 @@ export function AppShell({ children, hideTabs }: { children: ReactNode; hideTabs
   );
 }
 
-export function StepHeader({ step, total, onBack }: { step?: number; total?: number; onBack: () => void }) {
+export function StepHeader({ step, total, onBack }: { step?: number | undefined; total?: number | undefined; onBack: () => void }) {
   const { t } = useI18n();
   return <div className="flex items-center gap-3 py-4"><Button type="button" size="icon" variant="ghost" className="size-11 shrink-0" onClick={onBack} aria-label={t.back}><ArrowLeft /></Button>{step && total ? <div className="min-w-0 flex-1"><p className="text-sm font-medium text-muted-foreground">{t.stepOf(step, total)}</p><div className="mt-2 h-1 rounded-full bg-muted" role="progressbar" aria-valuenow={step} aria-valuemin={1} aria-valuemax={total}><div className="h-full rounded-full bg-primary transition-all" style={{ width: `${step / total * 100}%` }} /></div></div> : null}</div>;
 }

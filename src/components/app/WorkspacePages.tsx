@@ -29,7 +29,9 @@ function WorkspaceContent({ page }: { page: "connected" | "insurance" | "reports
   const save = async (remove = false) => {
     if (!session || isLoading) return;
     setBusy(true);
-    const next: ProfilePreferences = { ...preferences, insurance: remove ? undefined : insurance };
+    const next: ProfilePreferences = { ...preferences };
+    if (remove) delete next.insurance;
+    else next.insurance = insurance;
     const { error } = await supabase.from("profiles").update({ preferences: JSON.parse(JSON.stringify(next)) }).eq("id", session.user.id);
     setBusy(false);
     if (error) { toast.error(error.message); return; }

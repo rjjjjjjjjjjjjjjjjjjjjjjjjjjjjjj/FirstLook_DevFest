@@ -2,6 +2,7 @@ import { useRef } from "react";
 import { Camera, Lock } from "lucide-react";
 import { useI18n } from "@/lib/i18n";
 import { toDataUrl } from "@/lib/photos";
+import { Button } from "@/components/ui/button";
 
 export function PhotoPicker({ value, onChange }: { value: string | null; onChange: (d: string) => void }) {
   const { t } = useI18n();
@@ -22,9 +23,10 @@ export function PhotoPicker({ value, onChange }: { value: string | null; onChang
         }}
       />
       {value ? (
-        <img src={value} alt="" className="aspect-square w-full rounded-2xl object-cover" />
+        <img src={value} alt="" className="aspect-[4/3] max-h-[420px] w-full rounded-lg bg-muted object-contain" />
       ) : null}
-      <button
+      <Button
+        variant="ghost"
         type="button"
         onClick={() => ref.current?.click()}
         className={
@@ -35,7 +37,7 @@ export function PhotoPicker({ value, onChange }: { value: string | null; onChang
       >
         {!value && <Camera className="size-12" aria-hidden />}
         <span className="text-lg font-semibold">{value ? t.photoRetake : t.photoTake}</span>
-      </button>
+      </Button>
       <p className="text-muted-foreground">{t.photoTips}</p>
       <p className="flex items-center gap-2 text-sm text-muted-foreground">
         <Lock className="size-4" aria-hidden /> {t.photoPrivate}
