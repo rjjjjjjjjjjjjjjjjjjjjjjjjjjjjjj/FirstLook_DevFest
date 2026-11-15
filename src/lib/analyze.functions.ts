@@ -7,6 +7,7 @@ import {
   buildCheckPayload,
   buildComparePayload,
   extractComparison,
+  isFallback,
   IMAGE_TOO_LARGE,
   normalizeCheckResult,
   toBase64Image,
@@ -35,7 +36,7 @@ export const analyzeWound = createServerFn({ method: "POST" })
         const compareBody = buildComparePayload(photos[0]!.b64, photos[1]!.b64, data.lang);
         const [compareRaw, checkRaw] = await Promise.all([callAnalyze(compareBody), callAnalyze(checkBody)]);
         const result = normalizeCheckResult(checkRaw, data.lang, true);
-        if (!result) return { ok: false as const, error: AWS_FAILURE_MESSAGE };
+        if (!result || isFallback(compareRaw)) return { ok: false as const, error: AWS_FAILURE_MESSAGE };
         return { ok: true as const, result: applyComparison(result, extractComparison(compareRaw)) };
       }
 
