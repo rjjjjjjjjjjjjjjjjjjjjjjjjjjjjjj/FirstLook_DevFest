@@ -41,7 +41,8 @@ export function AppShell({ children, hideTabs }: { children: ReactNode; hideTabs
             <div className="flex min-w-0 items-center gap-2">
               <Button size="icon" variant="ghost" className="shrink-0 lg:hidden" aria-label={t.menu} onClick={() => setOpen(true)}><Menu /></Button>
               <span className="hidden text-xs text-muted-foreground sm:inline">{t.workspace}</span><ChevronRight className="hidden size-3 text-muted-foreground sm:block" />
-              <span className="truncate text-xs font-semibold">{current?.label ?? t.profileTitle}</span>
+              <span className="truncate text-sm font-bold sm:hidden">FIRSTLOOK.</span>
+              <span className="hidden truncate text-xs font-semibold sm:block">{current?.label ?? t.profileTitle}</span>
             </div>
             <div className="flex shrink-0 items-center gap-1">
               <span className="mr-3 hidden items-center gap-2 text-xs text-muted-foreground xl:flex"><span className="size-1.5 rounded-full bg-tier-home" />{t.privateWorkspace}</span>
